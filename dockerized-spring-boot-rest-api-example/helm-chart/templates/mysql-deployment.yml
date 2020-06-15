@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.mysql.name }}-deployment
+  labels:
+    app: {{ .Values.mysql.name }}
+spec:
+  replicas: {{ .Values.mysql.replicaCount }} 
+  selector:
+    matchLabels:
+      app: {{ .Values.mysql.name }}
+  strategy:
+    type: {{ .Values.mysql.strategy.type }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mysql.name }}
+    spec:
+      containers:
+      - image: {{ .Values.mysql.repository }}:{{ .Values.mysql.tag }}
+        name: {{ .Values.mysql.name }}
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mysql.name }}-secret
+              key: mysql_root_password
+                
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mysql.name }}-secret
+              key: mysql_user
+
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mysql.name }}-secret
+              key: mysql_password
+
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mysql.name }}-secret
+              key: mysql_database
+
+        ports:
+        - containerPort: {{ .Values.mysql.service.port }}
+          name: {{ .Values.mysql.name }}
+
+        volumeMounts:
+        - name: {{ .Values.mysql.persistentVolume }}
+          mountPath: {{ .Values.mysql.mountPath }}
+
+      volumes:
+      - name: {{ .Values.mysql.persistentVolume }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.mysql.persistentVolumeClaim }}

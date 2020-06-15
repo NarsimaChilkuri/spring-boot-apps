@@ -1,0 +1,37 @@
+apiVersion: apps/v1                
+kind: Deployment
+metadata:
+  name: {{ template "springbootchart.fullname" . }}-deployment   
+  namespace: {{ .Values.namespace }}  
+  labels:
+    component: {{ template "springbootchart.fullname" . }}
+spec:
+  replicas: {{ .Values.helloworld.replicaCount }}
+  selector:
+    matchLabels:
+      component: {{ template "springbootchart.fullname" . }}
+  template:
+    metadata:
+      labels:
+        component: {{ template "springbootchart.fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Values.helloworld.containerName }}
+        image: {{ .Values.helloworld.repository }}:{{ .Values.helloworld.tag }}
+        ports:
+        - containerPort: {{ .Values.helloworld.service.targetPort }}
+
+---
+
+apiVersion: v1       
+kind: Service       
+metadata:
+  name: {{ template "springbootchart.fullname" . }}-service
+  namespace: {{ .Values.namespace }}
+spec:
+  type: {{ .Values.helloworld.service.type }}
+  ports:
+   - port: {{ .Values.helloworld.service.port }}
+     targetPort : {{ .Values.helloworld.service.targetPort }}    
+  selector:
+    component: {{ template "springbootchart.fullname" . }}

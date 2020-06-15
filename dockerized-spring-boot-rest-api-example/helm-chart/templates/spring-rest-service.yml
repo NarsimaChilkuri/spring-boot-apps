@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.spring.name }}-service
+  labels:
+    app: {{ .Values.spring.name }}
+spec:
+  selector:
+    app: {{ .Values.spring.name }}
+  type: {{ .Values.spring.service.type }}
+  ports:
+  - port: {{ .Values.spring.service.port }}
+    targetPort: {{ .Values.spring.service.targetPort }}

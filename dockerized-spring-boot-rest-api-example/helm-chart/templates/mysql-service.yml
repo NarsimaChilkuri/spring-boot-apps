@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: spring-db
+  labels:
+    app: {{ .Values.mysql.name }}
+spec:
+  selector:
+    app: {{ .Values.mysql.name }}
+  ports:
+  - port: {{ .Values.mysql.service.port }}
+  selector:
+    app: {{ .Values.mysql.name }}
+  clusterIP: None

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-rest-deployment
+  labels:
+    app: spring-rest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-rest
+  template:
+    metadata:
+      labels:
+        app: spring-rest
+    spec:
+      containers:
+      - name: spring-rest
+        image: 74744556/spring-rest-api:v1
+        ports:
+        - containerPort: 8080

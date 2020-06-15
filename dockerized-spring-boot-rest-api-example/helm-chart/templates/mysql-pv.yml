@@ -1,0 +1,14 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Values.mysql.persistentVolume }}
+  labels:
+    type: local
+spec:
+  storageClassName: {{ .Values.mysql.storage.className }}
+  capacity:
+    storage: {{ .Values.mysql.storage.capacity }}
+  accessModes:
+    - {{ .Values.mysql.storage.accessModes }}
+  hostPath:
+    path: {{ .Values.mysql.pvMountPath | quote }}

@@ -1,0 +1,35 @@
+version: "3"
+services:
+  spring-app:
+    image: 74744556/spring-rest-api:v1 
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+      replicas: 1
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-boot-network
+    depends_on:
+      - spring-db
+ 
+  spring-db:
+    image: mysql:8
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+      replicas: 1
+    restart: always
+    ports:
+      - "3306:3306"
+    networks:
+      - spring-boot-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=springdb
+      - MYSQL_USER=springuser
+      - MYSQL_PASSWORD=springpassword
+
+networks:
+  spring-boot-network:

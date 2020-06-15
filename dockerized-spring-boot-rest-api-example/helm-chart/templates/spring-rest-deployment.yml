@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.spring.name }}-deployment
+  labels:
+    app: {{ .Values.spring.name }}
+spec:
+  replicas: {{ .Values.spring.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.spring.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.spring.name }}
+    spec:
+      containers:
+      - name: {{ .Values.spring.name }}
+        image: {{ .Values.spring.repository }}:{{ .Values.spring.tag }}
+        ports:
+        - containerPort: {{ .Values.spring.service.targetPort }}

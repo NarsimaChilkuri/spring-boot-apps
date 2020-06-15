@@ -1,0 +1,31 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: employee-jdbc
+spec:
+  type: LoadBalancer
+  selector:
+    app: employee-jdbc
+  ports:
+    - name: http
+      protocol: TCP
+      # ELB's port
+      port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-jdbc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee-jdbc
+  template:
+    metadata:
+      labels:
+        app: employee-jdbc
+    spec:
+      containers:
+        - name: employee-jdbc
+          image: naresh240/employee-jdbc
