@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+  labels:
+    component: springapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: springapp
+  template:
+    metadata:
+      labels:
+        component: springapp
+    spec:
+      containers:
+      - name: spring-container
+        image: nfrankel/configmgmt:0.0.2-SNAPSHOT
+        envFrom:                                  
+        - secretRef:
+            name: spring-secret
+        ports:
+        - containerPort: 8080
